@@ -1,58 +1,78 @@
 #!/usr/bin/python3
+"""
+Node Class
+
+creates node obj
+"""
+
+
 class Node:
+    """
+    Initializing node obj
+    """
     def __init__(self, data, next_node=None):
-        if type(data) is not int:
-            raise TypeError("data must be an integer")
-        self.__data = data
-        if type(next_node) is not Node and next_node is not None:
-            raise TypeError("next_node must be a Node object")
-        self.__next_node = next_node
+        self.data = data
+        self.next_node = next_node
 
     @property
     def data(self):
-        return self.__data
+        return (self.__data)
 
     @data.setter
     def data(self, value):
         if type(value) is not int:
             raise TypeError("data must be an integer")
-        self.__data = value
+        else:
+            self.__data = value
 
     @property
     def next_node(self):
-        return self.__next_node
+        return (self.__next_node)
 
     @next_node.setter
     def next_node(self, value):
-        if type(value) is not Node and value is not None:
+        if value is None:
+            self.__next_node = value
+        elif isinstance(value, Node):
+            self.__next_node = value
+        else:
             raise TypeError("next_node must be a Node object")
-        self.__next_node = value
+
+"""
+SinglyLinkedList class
+creats a linkedlist of sorted Node objs and prints
+"""
 
 
 class SinglyLinkedList:
+    """
+    Initializing SinglyLinkedList obj
+    """
     def __init__(self):
         self.__head = None
 
+    """
+    Insert sorted Node obj
+    """
     def sorted_insert(self, value):
-        new = Node(value)
-        if self.__head is None:
-            self.__head = new
-        elif self.__head.data >= value:
-            new.next_node = self.__head
-            self.__head = new
-        else:
-            temp = self.__head
-            new.next_node = temp.next_node
-            while temp.next_node and value > temp.next_node.data:
-                new.next_node = temp.next_node.next_node
-                temp = temp.next_node
-            temp.next_node = new
-
+        if self.__head is None or value < self.__head.data:
+            self.__head = Node(value, self.__head)
+            return
+        tmp = self.__head
+        while tmp.next_node is not None and tmp.next_node.data < value:
+            tmp = tmp.next_node
+        tmp.next_node = Node(value, tmp.next_node)
+    """
+    Print
+    """
     def __str__(self):
-        res = ""
-        temp = self.__head
-        while temp is not None:
-            res = res + str(temp.data) + "\n"
-            temp = temp.next_node
-        res = res[:-1]
-        return res
+        if self.__head is None:
+            return ("")
+        tmp = self.__head
+        _list = ""
+        while tmp is not None:
+            _list += str(tmp.data)
+            tmp = tmp.next_node
+            if tmp is not None:
+                _list += "\n"
+        return (_list)
