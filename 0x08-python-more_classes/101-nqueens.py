@@ -1,85 +1,96 @@
-import time
-
-BOARD_SIZE = 8  # it is advised not to use a board size bigger than 20
-QUEEN_TOKEN = 'Q'  # the representation of the queen on the board structure
-
-
-def is_queen_safe(board, row, col):
-    '''Checks if a queen can be safely placed in the square specified by (row, col)'''
-    return is_queen_safe_row(board, row) and is_queen_safe_col(board, col) and is_queen_safe_diagonals(board, row, col)
+#!/usr/bin/python3
+"""
+This module contains an algorithm that resolves the N-Queen puzzle
+using backtracking
+"""
 
 
-def is_queen_safe_row(board, row):
-    '''Checks if a queen can be safely placed in the specified row'''
-    for y in range(BOARD_SIZE):
-        if board[row][y] == QUEEN_TOKEN:
-            return False
-    return True
-
-
-def is_queen_safe_col(board, col):
-    '''Checks if a queen can be safely placed in the specified column'''
-    for x in range(BOARD_SIZE):
-        if board[x][col] == QUEEN_TOKEN:
-            return False
-    return True
-
-
-def is_queen_safe_diagonals(board, row, col):
-    '''Checks if a queen can be safely placed in the diagonals crossing through the square specified by (row, col)'''
-    for offset in range(1, row + 1):
-        if row - offset >= 0 and col + offset < BOARD_SIZE:
-            if board[row - offset][col + offset] == QUEEN_TOKEN:
-                return False
-        if col - offset >= 0 and col - offset >= 0:
-            if board[row - offset][col - offset] == QUEEN_TOKEN:
-                return False
-    return True
-
-
-def generate_empty_board():
-    '''Generate and empty chessboard
-    Returns:
-        list[list[int]]: A 2D list of all-zeros that represents an empty chessboard
-    '''
-    board = []
-
-    for i in range(BOARD_SIZE):
-        board.append([])
-        for _ in range(BOARD_SIZE):
-            board[i].append(0)
-    return board
-
-
-def print_board(board):
-    '''Print the chessboard'''
-    for i in range(BOARD_SIZE):
-        for j in range(BOARD_SIZE):
-            print(board[i][j], end=' ')
-        print()
-    print()
-
-
-def solve(board, curr_row=0):
-    '''Recursively solves and prints all solutions to the N-Queens Problem
-    
+def isSafe(m_queen, nqueen):
+    """ Method that determines if the queens can or can't kill each other
     Args:
-        board (list[list[int]]): The board structure on which the problem will be solved
-        curr_row (int): The index of the row where a queen could be placed
-    '''
-    if curr_row == BOARD_SIZE:
-        print_board(board)
-    else:
-        for col in range(BOARD_SIZE):
-            if is_queen_safe(board, curr_row, col):
-                board[curr_row][col] = QUEEN_TOKEN
-                solve(board, curr_row + 1)
-                board[curr_row][col] = 0
+        m_queen: array that has the queens positions
+        nqueen: queen number
+    Returns:
+        True: when queens can't kill each other
+        False: when some of the queens can kill
+    """
+
+    for i in range(nqueen):
+
+        if m_queen[i] == m_queen[nqueen]:
+            return False
+
+        if abs(m_queen[i] - m_queen[nqueen]) == abs(i - nqueen):
+            return False
+
+    return True
+
+
+def print_result(m_queen, nqueen):
+    """ Method that prints the list with the Queens positions
+    Args:
+        m_queen: array that has the queens positions
+        nqueen: queen number
+    """
+
+    res = []
+
+    for i in range(nqueen):
+        res.append([i, m_queen[i]])
+
+    print(res)
+
+
+def Queen(m_queen, nqueen):
+    """ Recursive function that executes the Backtracking algorithm
+    Args:
+        m_queen: array that has the queens positions
+        nqueen: queen number
+    """
+
+    if nqueen is len(m_queen):
+        print_result(m_queen, nqueen)
+        return
+
+    m_queen[nqueen] = -1
+
+    while((m_queen[nqueen] < len(m_queen) - 1)):
+
+        m_queen[nqueen] += 1
+
+        if isSafe(m_queen, nqueen) is True:
+
+            if nqueen is not len(m_queen):
+                Queen(m_queen, nqueen + 1)
+
+
+def solveNQueen(size):
+    """ Function that invokes the Backtracking algorithm
+    Args:
+        size: size of the chessboard
+    """
+
+    m_queen = [-1 for i in range(size)]
+
+    Queen(m_queen, 0)
 
 
 if __name__ == '__main__':
-    board = generate_empty_board()
-    t1 = time.perf_counter()
-    solve(board)
-    t2 = time.perf_counter()
-    print(f'Time taken: {t2 - t1}s')
+
+    import sys
+
+    if len(sys.argv) == 1 or len(sys.argv) > 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+
+    try:
+        size = int(sys.argv[1])
+    except:
+        print("N must be a number")
+        sys.exit(1)
+
+    if size < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    solveNQueen(size)
