@@ -4,3 +4,4 @@
 
 class Rectangle():
     """Empty definition of a class to represent a rectangle"""
+    pass
