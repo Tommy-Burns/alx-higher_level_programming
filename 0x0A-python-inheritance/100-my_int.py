@@ -1,10 +1,17 @@
 #!/usr/bin/python3
-class MyInt(int):
-    '''rebel int class'''
-    def __eq__(self, other):
-        '''if true returns false'''
-        return False
+""" Provides a rebel integer
+"""
 
-    def __ne__(self, other):
-        '''if false returns ture'''
-        return True
+
+class MyInt(int):
+    """ MyInt is a rebel. MyInt has == and != operators inverted.
+    """
+    def __eq__(self, value):
+        """ Do the opposite of ==
+        """
+        return super().__ne__(value)
+
+    def __ne__(self, value):
+        """ Do the opposite of !=
+        """
+        return super().__eq__(value)

@@ -1,6 +1,12 @@
 #!/usr/bin/python3
+""" Manipulate lists of integers
+"""
+
+
 class MyList(list):
-    '''MyList class'''
+    """ Manage a list of integers
+    """
     def print_sorted(self):
-        '''that prints the list, but sorted (ascending sort)'''
-        print (sorted(self))
+        """ Print a list sorted in ascending order
+        """
+        print(sorted(self))
